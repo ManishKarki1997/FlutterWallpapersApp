@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpapers/providers/wallpaper_providers.dart';
-import 'package:wallpapers/screens/Wallpapers.dart';
+import 'package:wallpapers/screens/Home.dart';
 
 void main() {
   runApp(MyApp());

@@ -1,18 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
-import 'package:wallpapers/models/Wallpaper.dart';
 import 'package:wallpapers/providers/wallpaper_providers.dart';
-import 'package:wallpapers/services/fetchWallpapers.dart';
 
-class Home extends StatefulWidget {
+class LatestWallpapers extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _LatestWallpapersState createState() => _LatestWallpapersState();
 }
 
-class _HomeState extends State<Home> {
+class _LatestWallpapersState extends State<LatestWallpapers> {
   ScrollController _scrollController;
 
   var wallpapersProvider;
@@ -22,13 +19,14 @@ class _HomeState extends State<Home> {
     super.initState();
     _scrollController = ScrollController();
     Future.delayed(Duration.zero, () {
-      Provider.of<WallpapersProvider>(context, listen: false).fetchWallpapers();
+      Provider.of<WallpapersProvider>(context, listen: false)
+          .fetchWallpapers('latest');
     });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         Provider.of<WallpapersProvider>(context, listen: false)
-            .fetchMoreWallpapers();
+            .fetchMoreWallpapers('latest');
       }
     });
   }
@@ -42,18 +40,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     var wallpapersProvider = Provider.of<WallpapersProvider>(context);
-    // wallpapersProvider.fetchWallpapers();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Wallpapers App'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.wb_sunny),
-            onPressed: null,
-          )
-        ],
-      ),
       body: Container(
         color: Theme.of(context).primaryColor,
         child: wallpapersProvider.wallpapers.length == 0
@@ -62,7 +50,7 @@ class _HomeState extends State<Home> {
                 backgroundColor: Colors.blue,
               ))
             : RefreshIndicator(
-                onRefresh: () => wallpapersProvider.fetchWallpapers(),
+                onRefresh: () => wallpapersProvider.fetchWallpapers('latest'),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
                   child: new StaggeredGridView.countBuilder(
@@ -116,30 +104,6 @@ class _HomeState extends State<Home> {
                     crossAxisSpacing: 6.0,
                   ),
                 ),
-                // child: ListView.builder(
-                //   controller: _scrollController,
-                //   itemBuilder: (BuildContext context, int index) {
-                //     if (index == wallpapersProvider.wallpapers.length - 1 &&
-                //         wallpapersProvider.nextPageAvailable) {
-                //       return CupertinoActivityIndicator();
-                //     }
-                //     return Container(
-                //       padding: EdgeInsets.symmetric(
-                //         horizontal: 20.0,
-                //       ),
-                //       decoration: BoxDecoration(
-                //         image: DecorationImage(
-                //             image: NetworkImage(wallpapersProvider
-                //                 .wallpapers[index].previewWallpaper),
-                //             fit: BoxFit.cover),
-                //       ),
-                //       height: 300.0,
-                //       width: MediaQuery.of(context).size.width,
-                //       margin: EdgeInsets.symmetric(vertical: 10.0),
-                //     );
-                //   },
-                //   itemCount: wallpapersProvider.wallpapers.length,
-                // ),
               ),
       ),
     );
