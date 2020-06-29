@@ -18,9 +18,10 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blueGrey,
+          primaryColor: Color(0xff1E1E1E),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: WallpapersHome(),
+        home: Home(),
       ),
     );
   }

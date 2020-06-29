@@ -12,12 +12,13 @@ class WallpapersProvider with ChangeNotifier {
   List<Wallpaper> get wallpapers => _wallpapers;
   bool get nextPageAvailable => nextPageExists;
 
-  void fetchWallpapers() async {
+  Future<void> fetchWallpapers() async {
     final response = await http.get('http://192.168.1.111:3000/api/wallpaper');
     // final response = await http.get(
-    //     'http://192.168.1.111:3000/api/wallpaper?page=476&count=10&sortByDate=latest');
+    // 'http://192.168.1.111:3000/api/wallpaper?page=$pageIndex&count=10&sortByDate=latest');
 
     if (response.statusCode == 200) {
+      print('refreshing');
       var body = jsonDecode(response.body);
 
       var walls = (body['payload']['wallpapers'] as List)
@@ -29,6 +30,7 @@ class WallpapersProvider with ChangeNotifier {
       setWallpapers(walls);
       notifyListeners();
     } else {
+      // throw Exception('no response');
       print("No response");
     }
   }
