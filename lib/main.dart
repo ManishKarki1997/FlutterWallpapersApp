@@ -14,10 +14,10 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<WallpapersProvider>(
       create: (BuildContext context) => WallpapersProvider(),
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Wallpapers App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.blueGrey,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: WallpapersHome(),

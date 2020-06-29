@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpapers/models/Wallpaper.dart';
@@ -10,44 +11,71 @@ class WallpapersHome extends StatefulWidget {
 }
 
 class _WallpapersHomeState extends State<WallpapersHome> {
+  ScrollController _scrollController;
+
+  var wallpapersProvider;
+
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
+    Future.delayed(Duration.zero, () {
+      Provider.of<WallpapersProvider>(context, listen: false).fetchWallpapers();
+    });
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        Provider.of<WallpapersProvider>(context, listen: false)
+            .fetchMoreWallpapers();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     var wallpapersProvider = Provider.of<WallpapersProvider>(context);
-    wallpapersProvider.fetchWallpapers();
-    return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    // wallpapersProvider.fetchWallpapers();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Wallpapers App'),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Fetch Data Example'),
-        ),
-        body: Center(
-          child: wallpapersProvider.wallpapers.length == 0
-              ? Text(
-                  "Hello",
-                  style: TextStyle(
-                      color: Colors.black, decoration: TextDecoration.none),
-                )
-              : Column(
-                  children: <Widget>[
-                    Container(
-                      child: Text(
-                        wallpapersProvider.wallpapers[0].fullWallpaperUrl,
-                        style: TextStyle(
-                            color: Colors.black,
-                            decoration: TextDecoration.none),
-                      ),
-                    )
-                  ],
-                ),
-        ),
+      body: Container(
+        child: wallpapersProvider.wallpapers.length == 0
+            ? Center(
+                child: CircularProgressIndicator(
+                backgroundColor: Colors.blue,
+              ))
+            : ListView.builder(
+                controller: _scrollController,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index == wallpapersProvider.wallpapers.length - 1 &&
+                      wallpapersProvider.nextPageAvailable) {
+                    return CupertinoActivityIndicator();
+                  }
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.0,
+                    ),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: NetworkImage(wallpapersProvider
+                              .wallpapers[index].previewWallpaper),
+                          fit: BoxFit.cover),
+                    ),
+                    height: 300.0,
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.symmetric(vertical: 10.0),
+                  );
+                },
+                itemCount: wallpapersProvider.wallpapers.length,
+              ),
       ),
     );
   }
