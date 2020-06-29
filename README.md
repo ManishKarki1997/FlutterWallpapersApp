@@ -1,16 +1,37 @@
-# wallpapers
+# Wallpapers App
 
-A new Flutter project.
+A simple wallpaper app I made to learn flutter, this time using an API.
+
+My other app - simple offline note taking app with dark mode - is available here [FlutterNotesApp](https://github.com/ManishKarki1997/FlutterNotesApp)
+
+## Backend
+
+Backend is my own node server that scrapes Wallhaven and serves the api for the wallpapers
+
+Github for the backend [WallpapersAPI](https://github.com/ManishKarki1997/WallpapersAPI)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Clone the repository as WallpapersApp ( or anything you like)
 
-A few resources to get you started if this is your first Flutter project:
+```
+  git clone https://github.com/ManishKarki1997/FlutterWallpapersApp.git WallpapersApp
+```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Change directory in to the folder
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+  cd WallpapersApp
+```
+
+Download necessary dependencies
+
+```
+  flutter pub get
+```
+
+Run the app
+
+```
+  flutter run
+```
