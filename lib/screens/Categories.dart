@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wallpapers/providers/settings_provider.dart';
 import 'package:wallpapers/screens/SingleCategory.dart';
 
 class Categories extends StatefulWidget {
@@ -58,6 +60,8 @@ class _CategoriesState extends State<Categories> {
 
   @override
   Widget build(BuildContext context) {
+    var settingsProvider = Provider.of<SettingsProvider>(context);
+
     return Scaffold(
       body: Container(
         color: Theme.of(context).primaryColor,
@@ -87,7 +91,7 @@ class _CategoriesState extends State<Categories> {
                       height: 300.0,
                       width: MediaQuery.of(context).size.width,
                       child: Opacity(
-                        opacity: 0.4,
+                        opacity: settingsProvider.darkThemePreferred ? 0.4 : 1,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: CachedNetworkImage(

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wallpapers/providers/settings_provider.dart';
 
 class Settings extends StatefulWidget {
   @override
@@ -8,9 +10,11 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   bool darkModePreferred = true;
   bool loadHQImages = false;
+  bool floatingNavigationbar = false;
 
   @override
   Widget build(BuildContext context) {
+    var settingsProvider = Provider.of<SettingsProvider>(context);
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
@@ -34,6 +38,7 @@ class _SettingsState extends State<Settings> {
                   onChanged: (value) {
                     setState(() {
                       darkModePreferred = value;
+                      settingsProvider.toggleTheme();
                     });
                   },
                 ),
@@ -54,6 +59,27 @@ class _SettingsState extends State<Settings> {
                   onChanged: (value) {
                     setState(() {
                       loadHQImages = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  "Floating Navigation bar",
+                  style: TextStyle(color: Theme.of(context).accentColor),
+                ),
+                Switch(
+                  value: floatingNavigationbar,
+                  activeTrackColor: Theme.of(context).textSelectionColor,
+                  activeColor: Theme.of(context).highlightColor,
+                  inactiveTrackColor: Theme.of(context).textSelectionColor,
+                  onChanged: (value) {
+                    setState(() {
+                      floatingNavigationbar = value;
+                      settingsProvider.setPreferFloatingNavigationBar(value);
                     });
                   },
                 ),

@@ -124,6 +124,7 @@ class WallpapersProvider with ChangeNotifier {
         "http://192.168.1.111:3000/api/wallpaper/category/$categoryId?page=$categoryPageIndex&count=10&filter=popular";
 
     final response = await http.get(url);
+    _loadingCategoryWallpapers = true;
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);

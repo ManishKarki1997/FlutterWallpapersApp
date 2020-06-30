@@ -48,12 +48,13 @@ class _SingleCategoryState extends State<SingleCategory> {
     return Scaffold(
       body: Container(
         color: Theme.of(context).primaryColor,
-        child: wallpapersProvider.loadingCategoryWallpapers
+        child: wallpapersProvider.loadingCategoryWallpapers == true
             ? Center(
                 child: CircularProgressIndicator(
                 backgroundColor: Colors.blue,
               ))
-            : wallpapersProvider.categoryWallpapers.length == 0
+            : wallpapersProvider.categoryWallpapers.length == 0 &&
+                    wallpapersProvider.loadingCategoryWallpapers == false
                 ? Container(
                     height: MediaQuery.of(context).size.height,
                     color: Theme.of(context).primaryColor,
