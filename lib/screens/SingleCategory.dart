@@ -5,12 +5,15 @@ import 'package:provider/provider.dart';
 import 'package:wallpapers/providers/wallpaper_providers.dart';
 import 'package:wallpapers/screens/SingleWallpaper.dart';
 
-class LatestWallpapers extends StatefulWidget {
+class SingleCategory extends StatefulWidget {
   @override
-  _LatestWallpapersState createState() => _LatestWallpapersState();
+  _SingleCategoryState createState() => _SingleCategoryState();
+
+  final int categoryId;
+  SingleCategory(this.categoryId);
 }
 
-class _LatestWallpapersState extends State<LatestWallpapers> {
+class _SingleCategoryState extends State<SingleCategory> {
   ScrollController _scrollController;
 
   var wallpapersProvider;
@@ -21,13 +24,13 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
     _scrollController = ScrollController();
     Future.delayed(Duration.zero, () {
       Provider.of<WallpapersProvider>(context, listen: false)
-          .fetchWallpapers('latest');
+          .fetchCategoryWallpapers(widget.categoryId);
     });
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         Provider.of<WallpapersProvider>(context, listen: false)
-            .fetchMoreWallpapers('latest');
+            .fetchMoreCategoryWallpapers(widget.categoryId);
       }
     });
   }
@@ -45,39 +48,40 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
     return Scaffold(
       body: Container(
         color: Theme.of(context).primaryColor,
-        child: wallpapersProvider.wallpapers.length == 0
+        child: wallpapersProvider.loadingCategoryWallpapers
             ? Center(
                 child: CircularProgressIndicator(
                 backgroundColor: Colors.blue,
               ))
             : RefreshIndicator(
-                onRefresh: () => wallpapersProvider.fetchWallpapers('latest'),
+                onRefresh: () => wallpapersProvider
+                    .fetchMoreCategoryWallpapers(widget.categoryId),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
                   child: StaggeredGridView.countBuilder(
                     key: PageStorageKey('latestwallpaper'),
                     controller: _scrollController,
                     crossAxisCount: 4,
-                    itemCount: wallpapersProvider.wallpapers.length,
+                    itemCount: wallpapersProvider.categoryWallpapers.length,
                     itemBuilder: (BuildContext context, int index) {
-                      if (index == wallpapersProvider.wallpapers.length - 1 &&
-                          wallpapersProvider.nextPageAvailable) {
-                        return Center(
-                          child: Container(
-                            width: 20.0,
-                            height: 20.0,
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.blue,
-                            ),
-                          ),
-                        );
-                      }
+                      // if (index == wallpapersProvider.categoryWallpapers.length - 1 &&
+                      //     wallpapersProvider.nextPageAvailable) {
+                      //   return Center(
+                      //     child: Container(
+                      //       width: 20.0,
+                      //       height: 20.0,
+                      //       child: CircularProgressIndicator(
+                      //         backgroundColor: Colors.blue,
+                      //       ),
+                      //     ),
+                      //   );
+                      // }
                       return GestureDetector(
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => SingleWallpaper(
-                                wallpapersProvider.wallpapers[index]),
+                                wallpapersProvider.categoryWallpapers[index]),
                           ),
                         ),
                         child: Container(
@@ -90,7 +94,7 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
                           ),
                           child: CachedNetworkImage(
                             imageUrl: wallpapersProvider
-                                .wallpapers[index].previewWallpaper,
+                                .categoryWallpapers[index].previewWallpaper,
                             fit: BoxFit.cover,
                             progressIndicatorBuilder:
                                 (context, url, downloadProgress) => Center(

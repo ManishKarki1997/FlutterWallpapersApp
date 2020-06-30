@@ -8,21 +8,29 @@ class WallpapersProvider with ChangeNotifier {
   List<Wallpaper> _wallpapers = [];
   List<Wallpaper> _popularWallpapers = [];
   List<Wallpaper> _similarWallpapers = [];
+  List<Wallpaper> _categoryWallpapers = [];
 
   int popularPageIndex = 1;
   int latestPageIndex = 1;
+  int categoryPageIndex = 0;
   bool nextPageExists;
   bool nextPageExistsPopular;
+  bool _nextPageCategoryExists;
   bool similarWallpapersLoading;
+  bool
+      _loadingCategoryWallpapers; // could've used single boolean for similarWallpapersLoading. Oh well.
 
 // ------------ Getters ------------
   List<Wallpaper> get wallpapers => _wallpapers;
   List<Wallpaper> get popularWallpapers => _popularWallpapers;
   List<Wallpaper> get similarWallpapers => _similarWallpapers;
+  List<Wallpaper> get categoryWallpapers => _categoryWallpapers;
 
   bool get nextPageAvailable => nextPageExists;
   bool get nextPageAvailablePopular => nextPageExistsPopular;
+  bool get nextPageCategoryExists => _nextPageCategoryExists;
   bool get loadingSimilarWallpapers => similarWallpapersLoading;
+  bool get loadingCategoryWallpapers => _loadingCategoryWallpapers;
 
 // ------------ End Getters ------------
 
@@ -111,6 +119,61 @@ class WallpapersProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fetchCategoryWallpapers(int categoryId) async {
+    String url =
+        "http://192.168.1.111:3000/api/wallpaper/category/$categoryId?page=$categoryPageIndex&count=10&filter=popular";
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      var walls = (body['payload']['wallpapers'] as List)
+          .map((dynamic wall) => Wallpaper.fromJson(wall))
+          .toList();
+
+      _nextPageCategoryExists = body['payload']['next'];
+
+      _loadingCategoryWallpapers = false;
+      setCategoryWallpapers(walls);
+      notifyListeners();
+    } else {
+      // throw Exception('no response');
+      print("No response");
+    }
+  }
+
+  Future<void> fetchMoreCategoryWallpapers(int categoryId) async {
+    if (!nextPageCategoryExists) {
+      print('next page does not exist. returning...');
+      return;
+    }
+
+    String url;
+    url =
+        "http://192.168.1.111:3000/api/wallpaper/category/$categoryId?page=$categoryPageIndex&count=10&filter=popular";
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      categoryPageIndex++;
+
+      var walls = (body['payload']['wallpapers'] as List)
+          .map((dynamic wall) => Wallpaper.fromJson(wall))
+          .toList();
+
+      _nextPageCategoryExists = body['payload']['next'];
+
+      _categoryWallpapers.addAll(walls);
+      // setCategoryWallpapers(walls);
+      notifyListeners();
+    } else {
+      print("No response");
+    }
+  }
+
   void setWallpapers(List<Wallpaper> walls, String filter) {
     if (filter == 'popular') {
       _popularWallpapers = walls;
@@ -124,6 +187,11 @@ class WallpapersProvider with ChangeNotifier {
   void setSimilarWallpapers(List<Wallpaper> walls) {
     _similarWallpapers = walls;
 
+    notifyListeners();
+  }
+
+  void setCategoryWallpapers(List<Wallpaper> walls) {
+    _categoryWallpapers = walls;
     notifyListeners();
   }
 }

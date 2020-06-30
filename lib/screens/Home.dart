@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpapers/providers/wallpaper_providers.dart';
+import 'package:wallpapers/screens/Categories.dart';
 import 'package:wallpapers/screens/LatestWallpapers.dart';
 import 'package:wallpapers/screens/PopularWallpapers.dart';
 import 'package:wallpapers/screens/Settings.dart';
@@ -43,10 +44,16 @@ class _HomeState extends State<Home> {
             onPressed: null,
           )
         ],
+        elevation: 0,
       ),
       body: PageView(
         controller: _pageController,
-        children: <Widget>[LatestWallpapers(), PopularWallpapers(), Settings()],
+        children: <Widget>[
+          Categories(),
+          LatestWallpapers(),
+          PopularWallpapers(),
+          Settings(),
+        ],
         onPageChanged: (index) {
           setState(() {
             _selectedIndex = index;
@@ -58,6 +65,10 @@ class _HomeState extends State<Home> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.category),
+            title: Text("Categories"),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.new_releases),
             title: Text("Latest"),
