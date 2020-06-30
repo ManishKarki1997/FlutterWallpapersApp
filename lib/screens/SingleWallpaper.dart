@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:image_downloader/image_downloader.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpapers/models/Wallpaper.dart';
 import 'package:wallpapers/providers/wallpaper_providers.dart';
@@ -23,38 +24,41 @@ class _SingleWallpaperState extends State<SingleWallpaper> {
     });
   }
 
+  void _downloadImage() async {
+    await ImageDownloader.downloadImage(widget.wallpaper.fullWallpaperUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     var wallpapersProvider = Provider.of<WallpapersProvider>(context);
-    print(
-        "similar wallpapers length ${wallpapersProvider.similarWallpapers.length}");
-    print(
-        "wallpaper loading value ${wallpapersProvider.loadingSimilarWallpapers}");
 
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          CachedNetworkImage(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            imageUrl: widget.wallpaper.fullWallpaperUrl,
-            fit: BoxFit.cover,
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                Container(
+          GestureDetector(
+            onDoubleTap: _downloadImage,
+            child: CachedNetworkImage(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              color: Theme.of(context).primaryColor,
-              child: Center(
-                child: Container(
-                  height: 20.0,
-                  width: 20.0,
-                  child: CircularProgressIndicator(
-                      value: downloadProgress.progress),
+              imageUrl: widget.wallpaper.fullWallpaperUrl,
+              fit: BoxFit.cover,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: Theme.of(context).primaryColor,
+                child: Center(
+                  child: Container(
+                    height: 20.0,
+                    width: 20.0,
+                    child: CircularProgressIndicator(
+                        value: downloadProgress.progress),
+                  ),
                 ),
               ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
             ),
-            errorWidget: (context, url, error) => Icon(Icons.error),
           ),
           DraggableScrollableSheet(
             builder: (BuildContext context, ScrollController scrollController) {
