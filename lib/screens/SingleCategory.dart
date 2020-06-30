@@ -53,75 +53,99 @@ class _SingleCategoryState extends State<SingleCategory> {
                 child: CircularProgressIndicator(
                 backgroundColor: Colors.blue,
               ))
-            : RefreshIndicator(
-                onRefresh: () => wallpapersProvider
-                    .fetchMoreCategoryWallpapers(widget.categoryId),
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
-                  child: StaggeredGridView.countBuilder(
-                    key: PageStorageKey('latestwallpaper'),
-                    controller: _scrollController,
-                    crossAxisCount: 4,
-                    itemCount: wallpapersProvider.categoryWallpapers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      // if (index == wallpapersProvider.categoryWallpapers.length - 1 &&
-                      //     wallpapersProvider.nextPageAvailable) {
-                      //   return Center(
-                      //     child: Container(
-                      //       width: 20.0,
-                      //       height: 20.0,
-                      //       child: CircularProgressIndicator(
-                      //         backgroundColor: Colors.blue,
-                      //       ),
-                      //     ),
-                      //   );
-                      // }
-                      return GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SingleWallpaper(
-                                wallpapersProvider.categoryWallpapers[index]),
+            : wallpapersProvider.categoryWallpapers.length == 0
+                ? Container(
+                    height: MediaQuery.of(context).size.height,
+                    color: Theme.of(context).primaryColor,
+                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "No wallpapers available right now for this category.",
+                          style: TextStyle(
+                            color: Theme.of(context).accentColor,
+                            fontSize: 20.0,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            // image: DecorationImage(
-                            //     image: NetworkImage(wallpapersProvider
-                            //         .wallpapers[index].previewWallpaper),
-                            //     fit: BoxFit.cover),
-                            borderRadius: BorderRadius.circular(10.0),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        RaisedButton(
+                          color: Theme.of(context).highlightColor,
+                          child: Text(
+                            "Return",
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontSize: 16.0,
+                            ),
                           ),
-                          child: CachedNetworkImage(
-                            imageUrl: wallpapersProvider
-                                .categoryWallpapers[index].previewWallpaper,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => Center(
-                              child: Container(
-                                height: 20.0,
-                                width: 20.0,
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: () => wallpapersProvider
+                        .fetchMoreCategoryWallpapers(widget.categoryId),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
+                      child: StaggeredGridView.countBuilder(
+                        key: PageStorageKey('latestwallpaper'),
+                        controller: _scrollController,
+                        crossAxisCount: 4,
+                        itemCount: wallpapersProvider.categoryWallpapers.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SingleWallpaper(
+                                    wallpapersProvider
+                                        .categoryWallpapers[index]),
                               ),
                             ),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                            fadeOutDuration: const Duration(seconds: 1),
-                            fadeInDuration: const Duration(seconds: 3),
-                          ),
-                          // height: 300.0,
-                          // width: MediaQuery.of(context).size.width,
-                        ),
-                      );
-                    },
-                    staggeredTileBuilder: (int index) =>
-                        new StaggeredTile.count(2, index.isEven ? 3 : 2),
-                    mainAxisSpacing: 6.0,
-                    crossAxisSpacing: 6.0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                // image: DecorationImage(
+                                //     image: NetworkImage(wallpapersProvider
+                                //         .wallpapers[index].previewWallpaper),
+                                //     fit: BoxFit.cover),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl: wallpapersProvider
+                                    .categoryWallpapers[index].previewWallpaper,
+                                fit: BoxFit.cover,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) => Center(
+                                  child: Container(
+                                    height: 20.0,
+                                    width: 20.0,
+                                    child: CircularProgressIndicator(
+                                        value: downloadProgress.progress),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
+                                fadeOutDuration: const Duration(seconds: 1),
+                                fadeInDuration: const Duration(seconds: 3),
+                              ),
+                              // height: 300.0,
+                              // width: MediaQuery.of(context).size.width,
+                            ),
+                          );
+                        },
+                        staggeredTileBuilder: (int index) =>
+                            new StaggeredTile.count(2, index.isEven ? 3 : 2),
+                        mainAxisSpacing: 6.0,
+                        crossAxisSpacing: 6.0,
+                      ),
+                    ),
                   ),
-                ),
-              ),
       ),
     );
   }

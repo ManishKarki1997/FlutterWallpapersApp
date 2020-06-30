@@ -1,8 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:wallpapers/screens/SingleCategory.dart';
-import 'package:wallpapers/screens/SingleWallpaper.dart';
 
 class Categories extends StatefulWidget {
   @override
@@ -13,7 +11,7 @@ class _CategoriesState extends State<Categories> {
   List<dynamic> categoriesList = [
     {
       "name": "Minimalism",
-      "tagId": "227",
+      "tagId": "2278",
       "wallpaperUrl": "https://w.wallhaven.cc/full/w8/wallhaven-w8jdkr.jpg"
     },
     {
@@ -23,7 +21,7 @@ class _CategoriesState extends State<Categories> {
     },
     {
       "name": "Anime",
-      "tagId": "5",
+      "tagId": "1",
       "wallpaperUrl": "https://w.wallhaven.cc/full/lm/wallhaven-lm8xjp.png"
     },
     {
@@ -108,7 +106,7 @@ class _CategoriesState extends State<Categories> {
                             errorWidget: (context, url, error) =>
                                 Icon(Icons.error),
                             fadeOutDuration: const Duration(seconds: 1),
-                            fadeInDuration: const Duration(seconds: 3),
+                            fadeInDuration: const Duration(seconds: 2),
                           ),
                         ),
                       ),

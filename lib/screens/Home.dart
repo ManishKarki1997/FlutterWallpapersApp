@@ -1,9 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:provider/provider.dart';
-import 'package:wallpapers/providers/wallpaper_providers.dart';
 import 'package:wallpapers/screens/Categories.dart';
 import 'package:wallpapers/screens/LatestWallpapers.dart';
 import 'package:wallpapers/screens/PopularWallpapers.dart';
@@ -63,39 +59,45 @@ class _HomeState extends State<Home> {
               duration: Duration(milliseconds: 300), curve: Curves.easeIn);
         },
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            title: Text("Categories"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.new_releases),
-            title: Text("Latest"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up),
-            title: Text("Popular"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text("Settings"),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-        backgroundColor: Theme.of(context).bottomAppBarColor,
-        selectedItemColor: Theme.of(context).highlightColor,
-        unselectedItemColor: Theme.of(context).textSelectionColor,
-        onTap: (int index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-          _pageController.jumpToPage(
-            index,
-          );
-        },
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor: Theme.of(context).bottomAppBarColor,
+          primaryColor: Theme.of(context).bottomAppBarColor,
+        ),
+        child: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.category),
+              title: Text("Categories"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.new_releases),
+              title: Text("Latest"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.trending_up),
+              title: Text("Popular"),
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              title: Text("Settings"),
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          backgroundColor: Theme.of(context).bottomAppBarColor,
+          selectedItemColor: Theme.of(context).highlightColor,
+          unselectedItemColor: Theme.of(context).textSelectionColor,
+          onTap: (int index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+            _pageController.jumpToPage(
+              index,
+            );
+          },
+        ),
       ),
     );
   }
