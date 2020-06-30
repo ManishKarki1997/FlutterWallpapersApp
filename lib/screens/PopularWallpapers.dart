@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:wallpapers/providers/wallpaper_providers.dart';
+import 'package:wallpapers/screens/SingleWallpaper.dart';
 
 class PopularWallpapers extends StatefulWidget {
   @override
@@ -54,6 +55,7 @@ class _PopularWallpapersState extends State<PopularWallpapers> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
                   child: new StaggeredGridView.countBuilder(
+                    key: PageStorageKey('popularwallpaper'),
                     controller: _scrollController,
                     crossAxisCount: 4,
                     itemCount: wallpapersProvider.popularWallpapers.length,
@@ -71,32 +73,37 @@ class _PopularWallpapersState extends State<PopularWallpapers> {
                           ),
                         );
                       }
-                      return Container(
-                        decoration: BoxDecoration(
-                          // image: DecorationImage(
-                          //     image: NetworkImage(wallpapersProvider
-                          //         .wallpapers[index].previewWallpaper),
-                          //     fit: BoxFit.cover),
-                          borderRadius: BorderRadius.circular(6.0),
-                        ),
-                        child: CachedNetworkImage(
-                          imageUrl: wallpapersProvider
-                              .popularWallpapers[index].previewWallpaper,
-                          fit: BoxFit.cover,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) => Center(
-                            child: Container(
-                              height: 20.0,
-                              width: 20.0,
-                              child: CircularProgressIndicator(
-                                  value: downloadProgress.progress),
-                            ),
+                      return GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SingleWallpaper(
+                                wallpapersProvider.popularWallpapers[index]),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.error),
                         ),
-                        // height: 300.0,
-                        // width: MediaQuery.of(context).size.width,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          child: CachedNetworkImage(
+                            imageUrl: wallpapersProvider
+                                .popularWallpapers[index].previewWallpaper,
+                            fit: BoxFit.cover,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) => Center(
+                              child: Container(
+                                height: 20.0,
+                                width: 20.0,
+                                child: CircularProgressIndicator(
+                                    value: downloadProgress.progress),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          ),
+                          // height: 300.0,
+                          // width: MediaQuery.of(context).size.width,
+                        ),
                       );
                     },
                     staggeredTileBuilder: (int index) =>

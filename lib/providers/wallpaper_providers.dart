@@ -7,27 +7,30 @@ import 'package:wallpapers/models/Wallpaper.dart';
 class WallpapersProvider with ChangeNotifier {
   List<Wallpaper> _wallpapers = [];
   List<Wallpaper> _popularWallpapers = [];
+  List<Wallpaper> _similarWallpapers = [];
 
   int popularPageIndex = 1;
   int latestPageIndex = 1;
-
   bool nextPageExists;
   bool nextPageExistsPopular;
+  bool similarWallpapersLoading;
 
+// ------------ Getters ------------
   List<Wallpaper> get wallpapers => _wallpapers;
   List<Wallpaper> get popularWallpapers => _popularWallpapers;
+  List<Wallpaper> get similarWallpapers => _similarWallpapers;
+
   bool get nextPageAvailable => nextPageExists;
   bool get nextPageAvailablePopular => nextPageExistsPopular;
+  bool get loadingSimilarWallpapers => similarWallpapersLoading;
 
-  Future<void> fetchWallpapers(filter) async {
+// ------------ End Getters ------------
+
+  Future<void> fetchWallpapers(String filter) async {
     String url =
-        "http://192.168.1.111:3000/api/wallpaper?page=1&count=20&sortByDate=latest&filter=$filter";
-
-    print("first url is $url");
+        "http://192.168.1.111:3000/api/wallpaper?page=0&count=20&sortByDate=latest&filter=$filter";
 
     final response = await http.get(url);
-    // final response = await http.get(
-    // 'http://192.168.1.111:3000/api/wallpaper?page=$pageIndex&count=10&sortByDate=latest');
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
@@ -61,13 +64,14 @@ class WallpapersProvider with ChangeNotifier {
 
     String url;
     url = filter == 'popular'
-        ? "http://192.168.1.111:3000/api/wallpaper?page=${popularPageIndex + 1}&count=10&sortByDate=latest&filter=$filter"
-        : "http://192.168.1.111:3000/api/wallpaper?page=${latestPageIndex + 1}&count=10&sortByDate=latest&filter=$filter";
+        ? "http://192.168.1.111:3000/api/wallpaper?page=$popularPageIndex&count=10&sortByDate=latest&filter=$filter"
+        : "http://192.168.1.111:3000/api/wallpaper?page=$latestPageIndex&count=10&sortByDate=latest&filter=$filter";
 
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
       var body = jsonDecode(response.body);
+
       filter == 'popular' ? popularPageIndex++ : latestPageIndex++;
 
       var walls = (body['payload']['wallpapers'] as List)
@@ -86,6 +90,27 @@ class WallpapersProvider with ChangeNotifier {
     }
   }
 
+  Future<void> fetchSimilarWallpapers(String wallpaperId) async {
+    String url = "http://192.168.1.111:3000/api/wallpaper/similar/$wallpaperId";
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      var body = jsonDecode(response.body);
+
+      var walls = (body['payload']['similarWallpapers'] as List)
+          .map((dynamic wall) => Wallpaper.fromJson(wall))
+          .toList();
+
+      similarWallpapersLoading = false;
+      setSimilarWallpapers(walls);
+      notifyListeners();
+    } else {
+      // throw Exception('no response');
+      print("No response");
+    }
+  }
+
   void setWallpapers(List<Wallpaper> walls, String filter) {
     if (filter == 'popular') {
       _popularWallpapers = walls;
@@ -93,6 +118,12 @@ class WallpapersProvider with ChangeNotifier {
       _wallpapers = walls;
     }
     // _wallpapers = walls;
+    notifyListeners();
+  }
+
+  void setSimilarWallpapers(List<Wallpaper> walls) {
+    _similarWallpapers = walls;
+
     notifyListeners();
   }
 }
