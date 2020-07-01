@@ -5,6 +5,9 @@ import 'package:http/http.dart' as http;
 import 'package:wallpapers/models/Wallpaper.dart';
 
 class WallpapersProvider with ChangeNotifier {
+  String apiUri = "https://wallpaperscraperapi.herokuapp.com/api/wallpaper";
+  // "http://192.168.1.111:3000/api/wallpaper";
+
   List<Wallpaper> _wallpapers = [];
   List<Wallpaper> _popularWallpapers = [];
   List<Wallpaper> _similarWallpapers = [];
@@ -41,7 +44,7 @@ class WallpapersProvider with ChangeNotifier {
       popularPageIndex++;
     }
     String url =
-        "http://192.168.1.111:3000/api/wallpaper?page=$latestPageIndex&count=20&sortByDate=latest&filter=$filter";
+        "$apiUri?page=$latestPageIndex&count=20&sortByDate=latest&filter=$filter";
 
     final response = await http.get(url);
 
@@ -77,8 +80,8 @@ class WallpapersProvider with ChangeNotifier {
 
     String url;
     url = filter == 'popular'
-        ? "http://192.168.1.111:3000/api/wallpaper?page=$popularPageIndex&count=10&sortByDate=latest&filter=$filter"
-        : "http://192.168.1.111:3000/api/wallpaper?page=$latestPageIndex&count=10&sortByDate=latest&filter=$filter";
+        ? "$apiUri?page=$popularPageIndex&count=10&sortByDate=latest&filter=$filter"
+        : "$apiUri?page=$latestPageIndex&count=10&sortByDate=latest&filter=$filter";
 
     final response = await http.get(url);
 
@@ -104,7 +107,7 @@ class WallpapersProvider with ChangeNotifier {
   }
 
   Future<void> fetchSimilarWallpapers(String wallpaperId) async {
-    String url = "http://192.168.1.111:3000/api/wallpaper/similar/$wallpaperId";
+    String url = "$apiUri/similar/$wallpaperId";
 
     final response = await http.get(url);
 
@@ -126,7 +129,7 @@ class WallpapersProvider with ChangeNotifier {
 
   Future<void> fetchCategoryWallpapers(int categoryId) async {
     String url =
-        "http://192.168.1.111:3000/api/wallpaper/category/$categoryId?page=$categoryPageIndex&count=10&filter=popular";
+        "$apiUri/category/$categoryId?page=$categoryPageIndex&count=10&filter=popular";
 
     final response = await http.get(url);
     _loadingCategoryWallpapers = true;
@@ -157,7 +160,7 @@ class WallpapersProvider with ChangeNotifier {
 
     String url;
     url =
-        "http://192.168.1.111:3000/api/wallpaper/category/$categoryId?page=$categoryPageIndex&count=10&filter=popular";
+        "$apiUri/category/$categoryId?page=$categoryPageIndex&count=10&filter=popular";
 
     final response = await http.get(url);
 
