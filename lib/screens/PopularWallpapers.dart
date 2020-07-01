@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:wallpapers/providers/settings_provider.dart';
 import 'package:wallpapers/providers/wallpaper_providers.dart';
 import 'package:wallpapers/screens/SingleWallpaper.dart';
 
@@ -41,6 +42,7 @@ class _PopularWallpapersState extends State<PopularWallpapers> {
   @override
   Widget build(BuildContext context) {
     var wallpapersProvider = Provider.of<WallpapersProvider>(context);
+    var settingsProvider = Provider.of<SettingsProvider>(context);
 
     return Scaffold(
       body: Container(
@@ -51,6 +53,7 @@ class _PopularWallpapersState extends State<PopularWallpapers> {
                 backgroundColor: Colors.blue,
               ))
             : RefreshIndicator(
+                color: Theme.of(context).bottomAppBarColor,
                 onRefresh: () => wallpapersProvider.fetchWallpapers('popular'),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
@@ -86,8 +89,11 @@ class _PopularWallpapersState extends State<PopularWallpapers> {
                             borderRadius: BorderRadius.circular(6.0),
                           ),
                           child: CachedNetworkImage(
-                            imageUrl: wallpapersProvider
-                                .popularWallpapers[index].previewWallpaper,
+                            imageUrl: settingsProvider.loadHQImages == true
+                                ? wallpapersProvider
+                                    .popularWallpapers[index].fullWallpaperUrl
+                                : wallpapersProvider
+                                    .popularWallpapers[index].previewWallpaper,
                             fit: BoxFit.cover,
                             progressIndicatorBuilder:
                                 (context, url, downloadProgress) => Center(

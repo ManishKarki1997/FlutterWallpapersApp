@@ -8,10 +8,6 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  bool darkModePreferred = true;
-  bool loadHQImages = false;
-  bool floatingNavigationbar = false;
-
   @override
   Widget build(BuildContext context) {
     var settingsProvider = Provider.of<SettingsProvider>(context);
@@ -31,13 +27,12 @@ class _SettingsState extends State<Settings> {
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
                 Switch(
-                  value: darkModePreferred,
+                  value: settingsProvider.darkThemePreferred,
                   activeTrackColor: Theme.of(context).textSelectionColor,
                   activeColor: Theme.of(context).highlightColor,
                   inactiveTrackColor: Theme.of(context).textSelectionColor,
                   onChanged: (value) {
                     setState(() {
-                      darkModePreferred = value;
                       settingsProvider.toggleTheme();
                     });
                   },
@@ -52,13 +47,13 @@ class _SettingsState extends State<Settings> {
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
                 Switch(
-                  value: loadHQImages,
+                  value: settingsProvider.loadHQImages,
                   activeTrackColor: Theme.of(context).textSelectionColor,
                   activeColor: Theme.of(context).highlightColor,
                   inactiveTrackColor: Theme.of(context).textSelectionColor,
                   onChanged: (value) {
                     setState(() {
-                      loadHQImages = value;
+                      settingsProvider.setLoadHQImages(value);
                     });
                   },
                 ),
@@ -72,13 +67,12 @@ class _SettingsState extends State<Settings> {
                   style: TextStyle(color: Theme.of(context).accentColor),
                 ),
                 Switch(
-                  value: floatingNavigationbar,
+                  value: settingsProvider.preferFloatingNavigationBar,
                   activeTrackColor: Theme.of(context).textSelectionColor,
                   activeColor: Theme.of(context).highlightColor,
                   inactiveTrackColor: Theme.of(context).textSelectionColor,
                   onChanged: (value) {
                     setState(() {
-                      floatingNavigationbar = value;
                       settingsProvider.setPreferFloatingNavigationBar(value);
                     });
                   },

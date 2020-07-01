@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsProvider with ChangeNotifier {
   bool _darkThemePreferred = true;
@@ -33,22 +34,53 @@ class SettingsProvider with ChangeNotifier {
 
   void setDarkThemePreferred(bool value) {
     _darkThemePreferred = value;
+    activeTheme = currentTheme == darkTheme ? lightTheme : darkTheme;
     notifyListeners();
+    savePreferences();
   }
 
   void setLoadHQImages(bool value) {
     _loadHQImages = value;
     notifyListeners();
+    savePreferences();
   }
 
   void setPreferFloatingNavigationBar(bool value) {
     _preferFloatingNavigationBar = value;
     notifyListeners();
+    savePreferences();
   }
 
   void toggleTheme() {
     activeTheme = currentTheme == darkTheme ? lightTheme : darkTheme;
     _darkThemePreferred = currentTheme == darkTheme ? true : false;
+    savePreferences();
     notifyListeners();
+  }
+
+  void savePreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('wallpaperDarkThemePreferred', _darkThemePreferred);
+    await prefs.setBool('wallpaperLoadHQImages', _loadHQImages);
+    await prefs.setBool(
+        'wallpaperFloatingNavigation', _preferFloatingNavigationBar);
+  }
+
+  void loadPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool darkThemeValue = prefs.getBool('wallpaperDarkThemePreferred');
+    bool loadHQImagesValue = prefs.getBool('wallpaperLoadHQImages');
+    bool wallpaperFloatNavigationValue =
+        prefs.getBool('wallpaperFloatingNavigation');
+    if (darkThemeValue != null) setDarkThemePreferred(darkThemeValue);
+    if (loadHQImagesValue != null) setLoadHQImages(loadHQImagesValue);
+    if (wallpaperFloatNavigationValue != null)
+      setPreferFloatingNavigationBar(wallpaperFloatNavigationValue);
+    notifyListeners();
+  }
+
+  clearPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
   }
 }

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
+import 'package:wallpapers/providers/settings_provider.dart';
 import 'package:wallpapers/providers/wallpaper_providers.dart';
 import 'package:wallpapers/screens/SingleWallpaper.dart';
 
@@ -41,6 +42,7 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
   @override
   Widget build(BuildContext context) {
     var wallpapersProvider = Provider.of<WallpapersProvider>(context);
+    var settingsProvider = Provider.of<SettingsProvider>(context);
 
     return Scaffold(
       body: Container(
@@ -51,6 +53,7 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
                 backgroundColor: Colors.blue,
               ))
             : RefreshIndicator(
+                color: Theme.of(context).bottomAppBarColor,
                 onRefresh: () => wallpapersProvider.fetchWallpapers('latest'),
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
@@ -82,15 +85,14 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
                         ),
                         child: Container(
                           decoration: BoxDecoration(
-                            // image: DecorationImage(
-                            //     image: NetworkImage(wallpapersProvider
-                            //         .wallpapers[index].previewWallpaper),
-                            //     fit: BoxFit.cover),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: CachedNetworkImage(
-                            imageUrl: wallpapersProvider
-                                .wallpapers[index].previewWallpaper,
+                            imageUrl: settingsProvider.loadHQImages == true
+                                ? wallpapersProvider
+                                    .wallpapers[index].fullWallpaperUrl
+                                : wallpapersProvider
+                                    .wallpapers[index].previewWallpaper,
                             fit: BoxFit.cover,
                             progressIndicatorBuilder:
                                 (context, url, downloadProgress) => Center(
@@ -106,8 +108,8 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
                             fadeOutDuration: const Duration(seconds: 1),
                             fadeInDuration: const Duration(seconds: 3),
                           ),
-                          // height: 300.0,
-                          // width: MediaQuery.of(context).size.width,
+                          height: 300.0,
+                          width: MediaQuery.of(context).size.width,
                         ),
                       );
                     },

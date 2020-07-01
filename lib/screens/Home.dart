@@ -20,6 +20,12 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    Future.delayed(Duration.zero, () {
+      var settingsProvider =
+          Provider.of<SettingsProvider>(context, listen: false);
+      settingsProvider.loadPreferences();
+      print("dark theme value ${settingsProvider.darkThemePreferred}");
+    });
   }
 
   @override
@@ -33,7 +39,7 @@ class _HomeState extends State<Home> {
     var settingsProvider = Provider.of<SettingsProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wallpapers App'),
+        title: Text('WallP'),
         actions: <Widget>[
           IconButton(
             icon: Icon(

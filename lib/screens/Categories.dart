@@ -12,7 +12,7 @@ class Categories extends StatefulWidget {
 class _CategoriesState extends State<Categories> {
   List<dynamic> categoriesList = [
     {
-      "name": "Minimalism",
+      "name": "Minimal",
       "tagId": "2278",
       "wallpaperUrl": "https://w.wallhaven.cc/full/w8/wallhaven-w8jdkr.jpg"
     },

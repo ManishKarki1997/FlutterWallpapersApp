@@ -10,8 +10,8 @@ class WallpapersProvider with ChangeNotifier {
   List<Wallpaper> _similarWallpapers = [];
   List<Wallpaper> _categoryWallpapers = [];
 
-  int popularPageIndex = 1;
-  int latestPageIndex = 1;
+  int popularPageIndex = 0;
+  int latestPageIndex = 0;
   int categoryPageIndex = 0;
   bool nextPageExists;
   bool nextPageExistsPopular;
@@ -35,8 +35,13 @@ class WallpapersProvider with ChangeNotifier {
 // ------------ End Getters ------------
 
   Future<void> fetchWallpapers(String filter) async {
+    if (filter == 'latest' && _wallpapers.length >= 0) {
+      latestPageIndex++;
+    } else if (filter == 'popular' && _wallpapers.length >= 0) {
+      popularPageIndex++;
+    }
     String url =
-        "http://192.168.1.111:3000/api/wallpaper?page=0&count=20&sortByDate=latest&filter=$filter";
+        "http://192.168.1.111:3000/api/wallpaper?page=$latestPageIndex&count=20&sortByDate=latest&filter=$filter";
 
     final response = await http.get(url);
 
