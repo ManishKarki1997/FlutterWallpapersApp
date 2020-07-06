@@ -85,6 +85,7 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
                         // ),
                         onTap: () {
                           wallpapersProvider.setSimilarWallpapers([]);
+                          wallpapersProvider.setLoadingSimilarWallpapers(true);
                           Navigator.push(
                               context,
                               MaterialPageRoute(

@@ -77,13 +77,17 @@ class _PopularWallpapersState extends State<PopularWallpapers> {
                         );
                       }
                       return GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SingleWallpaper(
-                                wallpapersProvider.popularWallpapers[index]),
-                          ),
-                        ),
+                        onTap: () {
+                          wallpapersProvider.setSimilarWallpapers([]);
+                          wallpapersProvider.setLoadingSimilarWallpapers(true);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SingleWallpaper(
+                                    wallpapersProvider
+                                        .popularWallpapers[index]),
+                              ));
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6.0),

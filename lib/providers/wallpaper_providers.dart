@@ -204,4 +204,9 @@ class WallpapersProvider with ChangeNotifier {
     _categoryWallpapers = walls;
     notifyListeners();
   }
+
+  void setLoadingSimilarWallpapers(bool value) {
+    similarWallpapersLoading = value;
+    notifyListeners();
+  }
 }
