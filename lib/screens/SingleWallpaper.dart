@@ -72,7 +72,9 @@ class _SingleWallpaperState extends State<SingleWallpaper> {
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: Theme.of(context).bottomAppBarColor,
-                  borderRadius: BorderRadius.circular(32.0),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(32.0),
+                      topRight: Radius.circular(32.0)),
                 ),
                 child: Column(
                   children: <Widget>[
