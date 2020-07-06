@@ -24,7 +24,6 @@ class _HomeState extends State<Home> {
       var settingsProvider =
           Provider.of<SettingsProvider>(context, listen: false);
       settingsProvider.loadPreferences();
-      print("dark theme value ${settingsProvider.darkThemePreferred}");
     });
   }
 

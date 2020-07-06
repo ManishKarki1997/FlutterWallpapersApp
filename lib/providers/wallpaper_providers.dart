@@ -5,8 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:wallpapers/models/Wallpaper.dart';
 
 class WallpapersProvider with ChangeNotifier {
-  String apiUri = "https://wallpaperscraperapi.herokuapp.com/api/wallpaper";
-  // "http://192.168.1.111:3000/api/wallpaper";
+  // String apiUri = "https://wallpaperscraperapi.herokuapp.com/api/wallpaper";
+  String apiUri = "http://192.168.1.111:3000/api/wallpaper";
 
   List<Wallpaper> _wallpapers = [];
   List<Wallpaper> _popularWallpapers = [];
@@ -108,6 +108,7 @@ class WallpapersProvider with ChangeNotifier {
 
   Future<void> fetchSimilarWallpapers(String wallpaperId) async {
     String url = "$apiUri/similar/$wallpaperId";
+    similarWallpapersLoading = true;
 
     final response = await http.get(url);
 

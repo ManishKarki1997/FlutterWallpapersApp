@@ -76,37 +76,50 @@ class _LatestWallpapersState extends State<LatestWallpapers> {
                         );
                       }
                       return GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SingleWallpaper(
-                                wallpapersProvider.wallpapers[index]),
-                          ),
-                        ),
+                        // onTap: () => Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => SingleWallpaper(
+                        //         wallpapersProvider.wallpapers[index]),
+                        //   ),
+                        // ),
+                        onTap: () {
+                          wallpapersProvider.setSimilarWallpapers([]);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SingleWallpaper(
+                                    wallpapersProvider.wallpapers[index]),
+                              ));
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          child: CachedNetworkImage(
-                            imageUrl: settingsProvider.loadHQImages == true
-                                ? wallpapersProvider
-                                    .wallpapers[index].fullWallpaperUrl
-                                : wallpapersProvider
-                                    .wallpapers[index].previewWallpaper,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => Center(
-                              child: Container(
-                                height: 20.0,
-                                width: 20.0,
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
+                          child: Hero(
+                            tag: wallpapersProvider
+                                .wallpapers[index].fullWallpaperUrl,
+                            child: CachedNetworkImage(
+                              imageUrl: settingsProvider.loadHQImages == true
+                                  ? wallpapersProvider
+                                      .wallpapers[index].fullWallpaperUrl
+                                  : wallpapersProvider
+                                      .wallpapers[index].previewWallpaper,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                child: Container(
+                                  height: 20.0,
+                                  width: 20.0,
+                                  child: CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                                ),
                               ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                              fadeOutDuration: const Duration(seconds: 1),
+                              fadeInDuration: const Duration(seconds: 3),
                             ),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                            fadeOutDuration: const Duration(seconds: 1),
-                            fadeInDuration: const Duration(seconds: 3),
                           ),
                           height: 300.0,
                           width: MediaQuery.of(context).size.width,

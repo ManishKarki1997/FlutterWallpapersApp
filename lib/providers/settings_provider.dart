@@ -34,7 +34,7 @@ class SettingsProvider with ChangeNotifier {
 
   void setDarkThemePreferred(bool value) {
     _darkThemePreferred = value;
-    activeTheme = currentTheme == darkTheme ? lightTheme : darkTheme;
+    activeTheme = _darkThemePreferred ? darkTheme : lightTheme;
     notifyListeners();
     savePreferences();
   }

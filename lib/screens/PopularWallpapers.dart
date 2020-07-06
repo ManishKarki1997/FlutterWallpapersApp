@@ -88,24 +88,28 @@ class _PopularWallpapersState extends State<PopularWallpapers> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(6.0),
                           ),
-                          child: CachedNetworkImage(
-                            imageUrl: settingsProvider.loadHQImages == true
-                                ? wallpapersProvider
-                                    .popularWallpapers[index].fullWallpaperUrl
-                                : wallpapersProvider
-                                    .popularWallpapers[index].previewWallpaper,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) => Center(
-                              child: Container(
-                                height: 20.0,
-                                width: 20.0,
-                                child: CircularProgressIndicator(
-                                    value: downloadProgress.progress),
+                          child: Hero(
+                            tag: wallpapersProvider
+                                .popularWallpapers[index].fullWallpaperUrl,
+                            child: CachedNetworkImage(
+                              imageUrl: settingsProvider.loadHQImages == true
+                                  ? wallpapersProvider
+                                      .popularWallpapers[index].fullWallpaperUrl
+                                  : wallpapersProvider.popularWallpapers[index]
+                                      .previewWallpaper,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                child: Container(
+                                  height: 20.0,
+                                  width: 20.0,
+                                  child: CircularProgressIndicator(
+                                      value: downloadProgress.progress),
+                                ),
                               ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
                             ),
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
                           ),
                           // height: 300.0,
                           // width: MediaQuery.of(context).size.width,
